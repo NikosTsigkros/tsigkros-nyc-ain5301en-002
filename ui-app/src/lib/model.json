@@ -1,0 +1,20 @@
+{
+  "features": [
+    "study_hours",
+    "attendance_percentage",
+    "previous_grade",
+    "assignments_submitted"
+  ],
+  "coefficients": [
+    1.7896279624474516,
+    0.15411179737774178,
+    0.18431061068718851,
+    2.255145418459118
+  ],
+  "intercept": -31.179418207240715,
+  "classes": [
+    "Fail",
+    "Pass"
+  ],
+  "accuracy": 0.95
+}

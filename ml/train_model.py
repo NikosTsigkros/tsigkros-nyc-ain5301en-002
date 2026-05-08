@@ -1,3 +1,5 @@
+import json
+import os
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
@@ -54,5 +56,26 @@ print(model.intercept_[0])
 # Save trained model
 joblib.dump(model, "student_performance_model.pkl")
 print("\nModel saved successfully: student_performance_model.pkl")
+
+# Export model parameters as JSON so the Next.js MVP can run inference
+# without a Python runtime in production.
+model_params = {
+    "features": list(X.columns),
+    "coefficients": model.coef_[0].tolist(),
+    "intercept": float(model.intercept_[0]),
+    "classes": label_encoder.classes_.tolist(),
+    "accuracy": float(accuracy),
+}
+
+JSON_TARGETS = [
+    "student_performance_model.json",
+    os.path.join("..", "ui-app", "src", "lib", "model.json"),
+]
+
+for target in JSON_TARGETS:
+    os.makedirs(os.path.dirname(target) or ".", exist_ok=True)
+    with open(target, "w") as f:
+        json.dump(model_params, f, indent=2)
+    print(f"Model parameters exported: {target}")
 
 print("MODEL TRAINING COMPLETE")
