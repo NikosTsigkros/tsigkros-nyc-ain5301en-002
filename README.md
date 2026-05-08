@@ -15,6 +15,76 @@ The project is a small MVP web application called **Student Performance Predicto
 └── README.md
 ```
 
+## Current Progress
+
+So far, the following implementation steps have been completed for the Student Performance Predictor MVP:
+
+1. Created the initial repository structure for the AIN5301 Assessment 002 project.
+
+2. Added a dedicated `ml/` directory to contain all machine learning-related scripts and generated datasets.
+
+3. Implemented a synthetic dataset generator using Python.
+
+4. Generated a mock student performance dataset (`student_performance_data.csv`) containing realistic academic-related data for machine learning experimentation.
+
+5. Defined the following dataset features:
+
+   - student_id
+
+   - study_hours
+
+   - attendance_percentage
+
+   - previous_grade
+
+   - assignments_submitted
+
+   - result (Pass / Fail)
+
+6. Implemented a Logistic Regression machine learning training pipeline using scikit-learn.
+
+7. Added preprocessing steps including:
+
+   - feature selection
+
+   - label encoding
+
+   - train/test splitting
+
+8. Trained a classification model to predict whether a student is likely to pass or fail.
+
+9. Evaluated the model using prediction accuracy metrics.
+
+10. Displayed the learned Logistic Regression coefficients to better understand feature importance and model behaviour.
+
+11. Serialized and saved the trained machine learning model using `joblib`:
+
+```text
+
+student_performance_model.pkl
+```
+
+12. Implemented a prediction inference script (predict.py) that loads the serialized model and performs real-time predictions using sample student data.
+
+13. Initialized the Next.js MVP application using:
+
+* TypeScript
+* App Router
+* Tailwind CSS
+* ESLint
+
+14. Prepared the frontend structure for integrating machine learning predictions into the web application.
+
+15. Established an incremental Git workflow with structured commits documenting each development stage of the project.
+
+16. Began preparing the project architecture for:
+
+* API prediction endpoints
+* frontend prediction forms
+* model integration
+* deployment
+* portfolio documentation
+
 ## How to Generate the Dataset
 
 ```bash
@@ -90,5 +160,5 @@ assignments_submitted: 2.2551
 The current Logistic Regression model achieved the following result during evaluation:
 
 ```text
-
 Accuracy: 95.00%
+```
