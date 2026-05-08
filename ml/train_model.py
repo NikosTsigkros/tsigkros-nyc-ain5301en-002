@@ -3,6 +3,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import accuracy_score
+import joblib
 
 # Load dataset
 data = pd.read_csv("student_performance_data.csv")
@@ -49,5 +50,9 @@ for feature, coefficient in zip(X.columns, model.coef_[0]):
     print(f"{feature}: {coefficient:.4f}")
 print("\nMODEL INTERCEPT:")
 print(model.intercept_[0])
+
+# Save trained model
+joblib.dump(model, "student_performance_model.pkl")
+print("\nModel saved successfully: student_performance_model.pkl")
 
 print("MODEL TRAINING COMPLETE")
