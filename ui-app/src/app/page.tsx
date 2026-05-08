@@ -22,6 +22,8 @@ export default function Home() {
           </p>
         </header>
 
+        <PredictorForm />
+
         <footer className="mt-auto border-t border-zinc-200 pt-6 text-xs text-zinc-500 dark:border-zinc-800 dark:text-zinc-500">
           Trained on a synthetic dataset of 200 students. Predictions are
           illustrative and not a substitute for academic judgement.
