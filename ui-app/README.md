@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Student Performance Predictor — Next.js MVP
+
+This is the frontend MVP for the AIN5301 Assessment 002 project. It is a [Next.js](https://nextjs.org) app (App Router, TypeScript, Tailwind CSS v4) that runs the Logistic Regression model trained in `../ml/` directly in the browser/server runtime — no Python required at runtime.
+
+## How it works
+
+1. The training pipeline at `../ml/train_model.py` trains a scikit-learn `LogisticRegression` model and exports its parameters (coefficients, intercept, class labels, accuracy) to `src/lib/model.json`.
+2. `src/lib/predict.ts` re-implements the same logistic regression in TypeScript, validating inputs and returning the predicted class plus the per-feature contributions.
+3. `src/app/api/predict/route.ts` exposes `POST /api/predict` which the form on `src/app/page.tsx` calls.
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to use the predictor.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## API
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+`POST /api/predict`
 
-## Learn More
+```json
+{
+  "study_hours": 6,
+  "attendance_percentage": 85,
+  "previous_grade": 72,
+  "assignments_submitted": 4
+}
+```
 
-To learn more about Next.js, take a look at the following resources:
+Response:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```json
+{
+  "prediction": {
+    "label": "Pass",
+    "probability": 0.99,
+    "confidence": 0.99,
+    "contributions": [
+      { "feature": "study_hours", "value": 6, "coefficient": 1.789, "contribution": 10.74 }
+    ]
+  },
+  "model": { "accuracy": 0.95, "classes": ["Fail", "Pass"], "features": ["..."] }
+}
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Refreshing the model
 
-## Deploy on Vercel
+Re-run the training pipeline whenever the dataset changes:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+cd ../ml
+python3 train_model.py
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This rewrites `src/lib/model.json` so the frontend automatically picks up the new weights on the next build.

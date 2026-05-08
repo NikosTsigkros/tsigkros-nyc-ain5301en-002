@@ -10,8 +10,20 @@ The project is a small MVP web application called **Student Performance Predicto
 .
 ├── ml/
 │   ├── generate_dataset.py
-│   └── student_performance_data.csv
+│   ├── student_performance_data.csv
+│   ├── train_model.py
+│   ├── student_performance_model.pkl
+│   └── student_performance_model.json
 ├── ui-app/
+│   └── src/
+│       ├── app/
+│       │   ├── api/predict/route.ts
+│       │   ├── layout.tsx
+│       │   └── page.tsx
+│       ├── components/PredictorForm.tsx
+│       └── lib/
+│           ├── model.json
+│           └── predict.ts
 └── README.md
 ```
 
@@ -84,6 +96,14 @@ student_performance_model.pkl
 * model integration
 * deployment
 * portfolio documentation
+
+17. Exported the trained model coefficients to `student_performance_model.json` so the Next.js MVP can run inference without a Python runtime in production.
+
+18. Implemented a TypeScript logistic regression inference layer (`ui-app/src/lib/predict.ts`) that mirrors the scikit-learn model and validates inputs.
+
+19. Added a Next.js API route at `POST /api/predict` that consumes the exported model and returns a Pass/Fail prediction with probability and per-feature contributions.
+
+20. Built the **Student Performance Predictor** MVP page with a Tailwind v4 form, dark-mode support, real-time prediction results, and feature contribution breakdown.
 
 ## How to Generate the Dataset
 
@@ -162,3 +182,47 @@ The current Logistic Regression model achieved the following result during evalu
 ```text
 Accuracy: 95.00%
 ```
+
+## How to run the MVP web app
+
+```bash
+cd ui-app
+
+npm install
+
+npm run dev
+
+# Open http://localhost:3000
+```
+
+The app calls `POST /api/predict` with a JSON body of the four features and renders the predicted outcome, the model confidence, and each feature's contribution to the decision.
+
+Example request:
+
+```bash
+curl -X POST http://localhost:3000/api/predict \
+  -H "Content-Type: application/json" \
+  -d '{"study_hours": 6, "attendance_percentage": 85, "previous_grade": 72, "assignments_submitted": 4}'
+```
+
+## Architecture
+
+```text
+[ml/train_model.py]                    (training, scikit-learn)
+        │
+        ├── student_performance_model.pkl   (Python inference)
+        └── student_performance_model.json ─┐
+                                            ▼
+                          [ui-app/src/lib/model.json]
+                                            │
+                                            ▼
+                  [ui-app/src/lib/predict.ts]   (pure-TS logistic regression)
+                                            │
+                                            ▼
+                [ui-app/src/app/api/predict/route.ts]   (Next.js API route)
+                                            │
+                                            ▼
+              [ui-app/src/components/PredictorForm.tsx]  (UI form + result)
+```
+
+Re-running `python3 train_model.py` retrains the model and refreshes both `student_performance_model.json` (in `ml/`) and `ui-app/src/lib/model.json`, so the frontend always stays in sync with the latest trained weights.
