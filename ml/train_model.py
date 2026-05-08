@@ -44,4 +44,10 @@ accuracy = accuracy_score(y_test, predictions)
 print("\nMODEL TRAINING COMPLETE\n")
 print(f"Accuracy: {accuracy * 100:.2f}%")
 
+print("\nMODEL COEFFICIENTS:")
+for feature, coefficient in zip(X.columns, model.coef_[0]):
+    print(f"{feature}: {coefficient:.4f}")
+print("\nMODEL INTERCEPT:")
+print(model.intercept_[0])
+
 print("MODEL TRAINING COMPLETE")
